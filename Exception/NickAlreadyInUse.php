@@ -34,18 +34,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Hoa\Irc {
+namespace {
+
+from('Hoa')
 
 /**
- * Class \Hoa\Irc\Exception.
+ * Hoa_Irc_Exception
+ */
+-> import('Irc.Exception.~');
+
+}
+
+namespace Hoa\Irc\Exception {
+
+/**
+ * Class \Hoa\Irc\Exception\NickAlreadyInUse.
  *
- * Extending the \Hoa\Core\Exception class.
+ * Extending the \Hoa\Irc\Exception class.
  *
- * @author     Ivan Enderlin <ivan.enderlin@hoa-project.net>
+ * @author     Yohann Dupont <yohann.dupont@hoa-project.net>
  * @copyright  Copyright © 2007-2014 Ivan Enderlin.
  * @license    New BSD License
  */
 
-class Exception extends \Hoa\Core\Exception { }
+class NickAlreadyInUse extends Exception { }
 
 }

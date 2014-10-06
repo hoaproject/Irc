@@ -41,7 +41,14 @@ from('Hoa')
 /**
  * \Hoa\Irc\Exception
  */
--> import('Irc.Exception')
+-> import('Irc.Exception.~')
+
+
+/**
+ * \Hoa\Irc\Exception\NickAlreadyInUse
+ */
+-> import('Irc.Exception.NickAlreadyInUse')
+
 
 /**
  * \Hoa\Irc\Node
@@ -168,6 +175,10 @@ class          Client
                     );
                   break;
 
+                case 433:
+                    throw new \Hoa\Irc\Exception\NickAlreadyInUse('Nick is already in use.');
+                    break;
+              
                 case 'PRIVMSG':
                     $middle   = trim($matches['middle']);
                     $message  = $matches['trailing'];
