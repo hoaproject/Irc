@@ -44,6 +44,12 @@ $uri    = 'tcp://chat.freenode.org:6667';
 $client = new Hoa\Irc\Client(new Hoa\Socket\Client($uri));
 ```
 
+It's also possible to use the socket URI directly in the constructor:
+
+```php
+$client = new Hoa\Irc\Client('tcp://chat.freenode.org:6667');
+```
+
 Then, we attach our listeners. When the connexion will be opened, we will join a
 channel, for example `#hoaproject` with the `Gordon` username:
 
