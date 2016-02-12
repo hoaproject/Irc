@@ -59,12 +59,20 @@ class          Client
     /**
      * Constructor.
      *
-     * @param   \Hoa\Socket\Client  $client    Client.
+     * @param   string|\Hoa\Socket\Client  $client    Client.
      * @return  void
      * @throws  \Hoa\Socket\Exception
      */
-    public function __construct(Socket\Client $client)
+    public function __construct($client)
     {
+        if( is_string($client) ) {
+            $client = new Socket\Client($client);
+        } elseif( !($client instanceof Socket\Client) ) {
+            throw new Exception(
+                'Client must be a valid Hoa\Socket\Client instance'
+            );
+        }
+
         parent::__construct($client);
         $this->getConnection()->setNodeName('\Hoa\Irc\Node');
         $this->setListener(
