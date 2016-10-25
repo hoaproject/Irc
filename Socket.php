@@ -49,18 +49,156 @@ use Hoa\Socket as HoaSocket;
 class Socket extends HoaSocket
 {
     /**
+     * Entity type: isuser.
+     *
+     * @const string
+     */
+    const ENTTYPE_ISUSER = 'isuser';
+
+    /**
+     * Entity type: ischannel.
+     *
+     * @const string
+     */
+    const ENTTYPE_ISCHANNEL = 'ischannel';
+
+    /**
+     * Host type: isserver.
+     *
+     * @const string
+     */
+    const HOSTTYPE_ISSERVER = 'isserver';
+
+    /**
+     * Host type: isnetwork.
+     *
+     * @const string
+     */
+    const HOSTTYPE_ISNETWORK = 'isnetwork';
+
+    /**
+     * Entity.
+     * @var string
+     */
+    private $_entity;
+
+    /**
+     * Entity type.
+     * @var string
+     */
+    private $_entityType = self::ENTTYPE_ISCHANNEL;
+
+    /**
+     * Host type.
+     * @var string
+     */
+    private $_hostType;
+
+    /**
+     * Options list.
+     * @var array
+     */
+    private $_options;
+
+    /**
+     * Username.
+     * @var string
+     */
+    private $_username;
+
+    /**
+     * Password.
+     * @var string
+     */
+    private $_password;
+
+
+
+    /**
      * Constructor
      *
      * @param   string   $uri         Socket URI.
      * @param   boolean  $secured     Whether the connection is secured.
+     * @param   string   $entity      Entity to access directly.
+     * @param   string   $username    Username to log in.
+     * @param   string   $password    Password to authenticate user.
+     * @param   array    $flags       List of flags to caracterize the entity.
+     * @param   array    $options     List of options to use for the connection.
      */
-    public function __construct($uri, $secured = false)
-    {
+    public function __construct(
+        $uri,
+        $secured       = false,
+        $entity        = null,
+        $username      = null,
+        $password      = null,
+        array $flags   = null,
+        array $options = []
+    ) {
         parent::__construct($uri);
 
         $this->_secured = $secured;
 
         return;
+    }
+
+    /**
+     * Retrieve Irc socket username.
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->_username;
+    }
+
+    /**
+     * Retrieve Irc socket password.
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->_password;
+    }
+
+    /**
+     * Retrieve Irc socket entity.
+     *
+     * @return string
+     */
+    public function getEntity()
+    {
+        return $this->_entity;
+    }
+
+    /**
+     * Retrieve Irc socket entity type.
+     *
+     * @return string
+     */
+    public function getEntityType()
+    {
+        return $this->_entityType;
+    }
+
+    /**
+     * Retrieve Irc socket host type.
+     *
+     * @return string
+     */
+    public function getHostType()
+    {
+        return $this->_hostType;
+    }
+
+    /**
+     * Retrieve Irc socket options.
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->_options;
     }
 
     /**
