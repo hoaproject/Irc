@@ -280,9 +280,44 @@ class Socket extends HoaSocket
                     ? 994
                     : 6667);
 
+        $parsed = array_merge([
+            'path'     => '',
+            'fragment' => '',
+            'query'    => '',
+            'user'     => null,
+            'pass'     => null
+        ], $parsed);
+        $complement =
+            ltrim($parsed['path'], '/') .
+            $parsed['fragment'] .
+            (empty($parsed['query'])?'':'?' . $parsed['query']);
+
+        $entity   = null;
+        $flags    = null;
+        $options  = [];
+
+        $pattern  = '/^((#|%23)?([^,?]+))(,([^?]+))?(\?(.*))?$/';
+        if (1 === preg_match($pattern, $complement, $matches)) {
+            $entity = $matches[3];
+            if (isset($matches[5])) {
+                $flags = explode(',', $matches[5]);
+            }
+            if (isset($matches[7]) && !empty($matches[7])) {
+                array_map(function ($item) use (&$options) {
+                    $tmp = explode('=', $item);
+                    $options[$tmp[0]] = $tmp[1];
+                }, explode('&', $matches[7]));
+            }
+        }
+
         return new static(
             'tcp://' . $parsed['host'] . ':' . $port,
-            $secure
+            $secure,
+            $entity,
+            $parsed['user'],
+            $parsed['pass'],
+            $flags,
+            $options
         );
     }
 }
