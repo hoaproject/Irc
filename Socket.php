@@ -136,7 +136,49 @@ class Socket extends HoaSocket
     ) {
         parent::__construct($uri);
 
-        $this->_secured = $secured;
+        $this->_secured  = $secured;
+        $this->_username = $username;
+        $this->_password = $password;
+        $this->_entity   = $entity;
+        //TODO: Maybe authorize only valid options like described in:
+        // https://tools.ietf.org/html/draft-butcher-irc-url-04#section-2.6
+        $this->_options  = $options;
+
+        if (null === $this->_entity && null !== $flags) {
+            throw new Exception("Can't define flags without defining entity.");
+        }
+        if (count($flags) > 2) {
+            throw new Exception(
+                "Can't have more than two flags [enttype, hosttype]."
+            );
+        }
+        while (count($flags) > 0) {
+            $flag = array_pop($flags);
+
+            if (
+                $flag === self::ENTTYPE_ISCHANNEL ||
+                $flag === self::ENTTYPE_ISUSER
+            ) {
+                $this->_entityType = $flag;
+
+                continue;
+            }
+            if (
+                $flag === self::HOSTTYPE_ISNETWORK ||
+                $flag === self::HOSTTYPE_ISSERVER
+            ) {
+                $this->_hostType = $flag;
+
+                continue;
+            }
+
+            throw new Exception('Unknown flag "%s" given.', 0, [$flag]);
+        }
+
+        if ($this->_entityType === self::ENTTYPE_ISUSER) {
+            //TODO: Parse entity to extract username / hostname like described
+            //in https://tools.ietf.org/html/draft-butcher-irc-url-04#section-2.5.2
+        }
 
         return;
     }
