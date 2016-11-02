@@ -53,28 +53,28 @@ class Socket extends HoaSocket
      *
      * @const string
      */
-    const ENTTYPE_ISUSER = 'isuser';
+    const USER_ENTITY = 'isuser';
 
     /**
      * Entity type: ischannel.
      *
      * @const string
      */
-    const ENTTYPE_ISCHANNEL = 'ischannel';
+    const CHANNEL_ENTITY = 'ischannel';
 
     /**
      * Host type: isserver.
      *
      * @const string
      */
-    const HOSTTYPE_ISSERVER = 'isserver';
+    const SERVER_HOST = 'isserver';
 
     /**
      * Host type: isnetwork.
      *
      * @const string
      */
-    const HOSTTYPE_ISNETWORK = 'isnetwork';
+    const NETWORK_HOST = 'isnetwork';
 
     /**
      * Entity.
@@ -86,7 +86,7 @@ class Socket extends HoaSocket
      * Entity type.
      * @var string
      */
-    private $_entityType = self::ENTTYPE_ISCHANNEL;
+    private $_entityType = self::CHANNEL_ENTITY;
 
     /**
      * Host type.
@@ -156,16 +156,16 @@ class Socket extends HoaSocket
             $flag = array_pop($flags);
 
             if (
-                $flag === self::ENTTYPE_ISCHANNEL ||
-                $flag === self::ENTTYPE_ISUSER
+                $flag === self::CHANNEL_ENTITY ||
+                $flag === self::USER_ENTITY
             ) {
                 $this->_entityType = $flag;
 
                 continue;
             }
             if (
-                $flag === self::HOSTTYPE_ISNETWORK ||
-                $flag === self::HOSTTYPE_ISSERVER
+                $flag === self::NETWORK_HOST ||
+                $flag === self::SERVER_HOST
             ) {
                 $this->_hostType = $flag;
 
@@ -175,7 +175,7 @@ class Socket extends HoaSocket
             throw new Exception('Unknown flag "%s" given.', 0, [$flag]);
         }
 
-        if ($this->_entityType === self::ENTTYPE_ISUSER) {
+        if ($this->_entityType === self::USER_ENTITY) {
             //TODO: Parse entity to extract username / hostname like described
             //in https://tools.ietf.org/html/draft-butcher-irc-url-04#section-2.5.2
         }

@@ -68,7 +68,7 @@ class Socket extends Test\Unit\Suite
                 $entity   = 'channel',
                 $username = 'user',
                 $password = 'pass',
-                $flags    = [SUT::ENTTYPE_ISCHANNEL, SUT::HOSTTYPE_ISNETWORK],
+                $flags    = [SUT::CHANNEL_ENTITY, SUT::NETWORK_HOST],
                 $options  = ['option1' => 'value', 'option2' => 0]
             )
             ->when($result = new SUT(
@@ -98,9 +98,9 @@ class Socket extends Test\Unit\Suite
                 ->string($result->getPassword())
                     ->isEqualTo($password)
                 ->string($result->getEntityType())
-                    ->isEqualTo(SUT::ENTTYPE_ISCHANNEL)
+                    ->isEqualTo(SUT::CHANNEL_ENTITY)
                 ->string($result->getHostType())
-                    ->isEqualTo(SUT::HOSTTYPE_ISNETWORK)
+                    ->isEqualTo(SUT::NETWORK_HOST)
                 ->array($result->getOptions())
                     ->string['option1']->isEqualTo('value')
                     ->integer['option2']->isEqualTo(0);
@@ -158,12 +158,12 @@ class Socket extends Test\Unit\Suite
                 $uri      = 'tcp://hoa-project.net:8889',
                 $secured  = true,
                 $entity   = 'entity',
-                $flags    = [SUT::ENTTYPE_ISUSER],
+                $flags    = [SUT::USER_ENTITY],
                 $socket   = new SUT($uri, $secured, $entity, null, null, $flags)
             )
             ->then
                 ->string($socket->getEntityType())
-                    ->isEqualTo(SUT::ENTTYPE_ISUSER)
+                    ->isEqualTo(SUT::USER_ENTITY)
                 ->variable($socket->getHostType())
                     ->isNull();
     }
@@ -175,14 +175,14 @@ class Socket extends Test\Unit\Suite
                 $uri      = 'tcp://hoa-project.net:8889',
                 $secured  = true,
                 $entity   = 'entity',
-                $flags    = [SUT::HOSTTYPE_ISNETWORK],
+                $flags    = [SUT::NETWORK_HOST],
                 $socket   = new SUT($uri, $secured, $entity, null, null, $flags)
             )
             ->then
                 ->string($socket->getHostType())
-                    ->isEqualTo(SUT::HOSTTYPE_ISNETWORK)
+                    ->isEqualTo(SUT::NETWORK_HOST)
                 ->string($socket->getEntityType())
-                    ->isEqualTo(SUT::ENTTYPE_ISCHANNEL);
+                    ->isEqualTo(SUT::CHANNEL_ENTITY);
     }
 
     public function case_get_entity_and_host_type()
@@ -192,14 +192,14 @@ class Socket extends Test\Unit\Suite
                 $uri      = 'tcp://hoa-project.net:8889',
                 $secured  = true,
                 $entity   = 'entity',
-                $flags    = [SUT::HOSTTYPE_ISSERVER, SUT::ENTTYPE_ISUSER],
+                $flags    = [SUT::SERVER_HOST, SUT::USER_ENTITY],
                 $socket   = new SUT($uri, $secured, $entity, null, null, $flags)
             )
             ->then
                 ->string($socket->getHostType())
-                    ->isEqualTo(SUT::HOSTTYPE_ISSERVER)
+                    ->isEqualTo(SUT::SERVER_HOST)
                 ->string($socket->getEntityType())
-                    ->isEqualTo(SUT::ENTTYPE_ISUSER);
+                    ->isEqualTo(SUT::USER_ENTITY);
     }
 
     public function case_get_options()
@@ -259,8 +259,8 @@ class Socket extends Test\Unit\Suite
                 'port'       => 6667,
                 'secured'    => false,
                 'entity'     => 'foobar',
-                'entityType' => SUT::ENTTYPE_ISCHANNEL,
-                'hostType'   => SUT::HOSTTYPE_ISSERVER
+                'entityType' => SUT::CHANNEL_ENTITY,
+                'hostType'   => SUT::SERVER_HOST
             ]
         );
     }
@@ -275,8 +275,8 @@ class Socket extends Test\Unit\Suite
                 'port'       => 6667,
                 'secured'    => false,
                 'entity'     => 'foobar',
-                'entityType' => SUT::ENTTYPE_ISCHANNEL,
-                'hostType'   => SUT::HOSTTYPE_ISNETWORK,
+                'entityType' => SUT::CHANNEL_ENTITY,
+                'hostType'   => SUT::NETWORK_HOST,
                 'options'    => ['key' => 'abcd']
             ]
         );
@@ -292,7 +292,7 @@ class Socket extends Test\Unit\Suite
                 'port'       => 6667,
                 'secured'    => false,
                 'entity'     => 'foobar',
-                'entityType' => SUT::ENTTYPE_ISCHANNEL,
+                'entityType' => SUT::CHANNEL_ENTITY,
                 'username'   => 'user',
                 'password'   => null
             ]
@@ -309,7 +309,7 @@ class Socket extends Test\Unit\Suite
                 'port'       => 6667,
                 'secured'    => false,
                 'entity'     => 'foobar',
-                'entityType' => SUT::ENTTYPE_ISUSER,
+                'entityType' => SUT::USER_ENTITY,
                 'options'    => ['option' => 'value'],
                 'username'   => 'user',
                 'password'   => 'pass'
@@ -323,7 +323,7 @@ class Socket extends Test\Unit\Suite
             $expect['options'] = [];
         }
         if (!isset($expect['entityType'])) {
-            $expect['entityType'] = SUT::ENTTYPE_ISCHANNEL;
+            $expect['entityType'] = SUT::CHANNEL_ENTITY;
         }
         if (!isset($expect['hostType'])) {
             $expect['hostType'] = null;
