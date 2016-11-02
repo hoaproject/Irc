@@ -210,7 +210,7 @@ class Socket extends Test\Unit\Suite
                 $secured  = true,
                 $options  = ['option1' => 0, 'option2' => 'value'],
                 $socket   = new SUT(
-                    $uri, $secured, null, null, null, null, $options
+                    $uri, $secured, null, null, null, [], $options
                 )
             )
             ->when($result = $socket->getOptions())

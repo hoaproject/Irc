@@ -131,7 +131,7 @@ class Socket extends HoaSocket
         $entity        = null,
         $username      = null,
         $password      = null,
-        array $flags   = null,
+        array $flags   = [],
         array $options = []
     ) {
         parent::__construct($uri);
@@ -144,7 +144,7 @@ class Socket extends HoaSocket
         // https://tools.ietf.org/html/draft-butcher-irc-url-04#section-2.6
         $this->_options  = $options;
 
-        if (null === $this->_entity && null !== $flags) {
+        if (null === $this->_entity && !empty($flags)) {
             throw new Exception("Can't define flags without defining entity.");
         }
         if (count($flags) > 2) {
@@ -293,7 +293,7 @@ class Socket extends HoaSocket
             (empty($parsed['query'])?'':'?' . $parsed['query']);
 
         $entity   = null;
-        $flags    = null;
+        $flags    = [];
         $options  = [];
 
         $pattern  = '/^((#|%23)?([^,\?]+))(,([^\?]+))?(\?(.*))?$/';
