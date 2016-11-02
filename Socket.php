@@ -80,37 +80,37 @@ class Socket extends HoaSocket
      * Entity.
      * @var string
      */
-    private $_entity;
+    protected $_entity;
 
     /**
      * Entity type.
      * @var string
      */
-    private $_entityType = self::CHANNEL_ENTITY;
+    protected $_entityType = self::CHANNEL_ENTITY;
 
     /**
      * Host type.
      * @var string
      */
-    private $_hostType;
+    protected $_hostType;
 
     /**
      * Options list.
      * @var array
      */
-    private $_options;
+    protected $_options;
 
     /**
      * Username.
      * @var string
      */
-    private $_username;
+    protected $_username;
 
     /**
      * Password.
      * @var string
      */
-    private $_password;
+    protected $_password;
 
 
 
