@@ -296,7 +296,7 @@ class Socket extends HoaSocket
         $flags    = null;
         $options  = [];
 
-        $pattern  = '/^((#|%23)?([^,?]+))(,([^?]+))?(\?(.*))?$/';
+        $pattern  = '/^((#|%23)?([^,\?]+))(,([^\?]+))?(\?(.*))?$/';
         if (1 === preg_match($pattern, $complement, $matches)) {
             $entity = $matches[3];
             if (isset($matches[5])) {
