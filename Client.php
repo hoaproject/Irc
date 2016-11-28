@@ -244,17 +244,13 @@ class          Client
     public function join($username, $channel, $password = null)
     {
         if (null !== $password) {
-            $this->send('PASS ' . $password);
+            $this->setPassword($password);
         }
 
-        $this->send('USER ' . $username . ' 0 * :' . $username);
-
-        $node = $this->getConnection()->getCurrentNode();
-        $node->setUsername($username);
-        $node->setChannel($channel);
+        $this->setUsername($username);
         $this->setNickname($username);
 
-        return $this->send('JOIN ' . $channel);
+        return $this->setChannel($channel);
     }
 
     /**
@@ -301,6 +297,41 @@ class          Client
     public function setNickname($nickname)
     {
         return $this->send('NICK ' . $nickname);
+    }
+
+    /**
+     * Set username.
+     *
+     * @param   string  $username    Username.
+     * @return  int
+     */
+    public function setUsername($username)
+    {
+        $this->getConnection()->getCurrentNode()->setUsername($username);
+        return $this->send('USER ' . $username . ' 0 * :' . $username);
+    }
+
+    /**
+     * Set password.
+     *
+     * @param   string  $password    Password.
+     * @return  int
+     */
+    public function setPassword($password)
+    {
+        return $this->send('PASS ' . $password);
+    }
+
+    /**
+     * Set channel.
+     *
+     * @param   string  $channel    Channel.
+     * @return  int
+     */
+    public function setChannel($channel)
+    {
+        $this->getConnection()->getCurrentNode()->setChannel($channel);
+        return $this->send('JOIN ' . $channel);
     }
 
     /**
