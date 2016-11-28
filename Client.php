@@ -83,6 +83,8 @@ class          Client
             )
         );
 
+        $this->registerListeners();
+
         return;
     }
 
@@ -308,6 +310,7 @@ class          Client
     public function setUsername($username)
     {
         $this->getConnection()->getCurrentNode()->setUsername($username);
+
         return $this->send('USER ' . $username . ' 0 * :' . $username);
     }
 
@@ -331,6 +334,7 @@ class          Client
     public function setChannel($channel)
     {
         $this->getConnection()->getCurrentNode()->setChannel($channel);
+
         return $this->send('JOIN ' . $channel);
     }
 
@@ -399,5 +403,34 @@ class          Client
         );
 
         return $matches;
+    }
+
+    /**
+     * Register client listeners to interact with socket connection.
+     * Help to handle default actions based on socket URI
+     */
+    protected function registerListeners()
+    {
+        $this->on('open', function (Event\Bucket $bucket) {
+            $source = $bucket->getSource();
+            $socket = $source->getConnection()->getSocket();
+            if (!($socket instanceof Socket)) {
+                return;
+            }
+
+            if (null !== $password = $socket->getPassword()) {
+                $source->setPassword($password);
+            }
+            if (null !== $username = $socket->getUsername()) {
+                $source->setUsername($username);
+                $source->setNickname($username);
+            }
+            if (
+                $socket->getEntitytype() === Socket::CHANNEL_ENTITY &&
+                null !== $entity = $socket->getEntity()
+            ) {
+                $source->setChannel("#" . $entity);
+            }
+        });
     }
 }
