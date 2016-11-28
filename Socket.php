@@ -122,7 +122,7 @@ class Socket extends HoaSocket
      * @param   string   $entity      Entity to access directly.
      * @param   string   $username    Username to log in.
      * @param   string   $password    Password to authenticate user.
-     * @param   array    $flags       List of flags to caracterize the entity.
+     * @param   array    $flags       List of flags to characterize the entity.
      * @param   array    $options     List of options to use for the connection.
      */
     public function __construct(
@@ -145,11 +145,11 @@ class Socket extends HoaSocket
         $this->_options  = $options;
 
         if (null === $this->_entity && !empty($flags)) {
-            throw new Exception("Can't define flags without defining entity.");
+            throw new Exception("Cannot define flags without defining entity.");
         }
         if (count($flags) > 2) {
             throw new Exception(
-                "Can't have more than two flags [enttype, hosttype]."
+                "Cannot have more than two flags [enttype, hosttype]."
             );
         }
         while (count($flags) > 0) {
