@@ -89,6 +89,12 @@ class Socket extends HoaSocket
     protected $_entityType = self::CHANNEL_ENTITY;
 
     /**
+     * Host.
+     * @var string
+     */
+    protected $_host;
+
+    /**
      * Host type.
      * @var string
      */
@@ -137,16 +143,13 @@ class Socket extends HoaSocket
         parent::__construct($uri);
 
         $this->_secured  = $secured;
-        $this->_username = $username;
-        $this->_password = $password;
         $this->_entity   = $entity;
-        //TODO: Maybe authorize only valid options like described in:
-        // https://tools.ietf.org/html/draft-butcher-irc-url-04#section-2.6
-        $this->_options  = $options;
 
         if (null === $this->_entity && !empty($flags)) {
             throw new Exception("Cannot define flags without defining entity.");
         }
+
+        $flags = array_filter($flags);
         if (count($flags) > 2) {
             throw new Exception(
                 "Cannot have more than two flags [enttype, hosttype]."
@@ -175,9 +178,20 @@ class Socket extends HoaSocket
             throw new Exception('Unknown flag "%s" given.', 0, [$flag]);
         }
 
+        $this->_username = $username;
+        $this->_password = $password;
+        $this->_options  = $this->parseOptions($options);
+
         if ($this->_entityType === self::USER_ENTITY) {
-            //TODO: Parse entity to extract username / hostname like described
-            //in https://tools.ietf.org/html/draft-butcher-irc-url-04#section-2.5.2
+            preg_match(
+                '/^(?<nick>[^!]+)(!(?<user>[^@]+)(@(?<host>.+))?)?$/',
+                $this->_entity,
+                $parsed
+            );
+
+            $this->_entity   = $parsed['nick'];
+            $this->_username = isset($parsed['user'])?$parsed['user']:$this->_username;
+            $this->_host = isset($parsed['host'])?$parsed['host']:null;
         }
 
         return;
@@ -221,6 +235,16 @@ class Socket extends HoaSocket
     public function getEntityType()
     {
         return $this->_entityType;
+    }
+
+    /**
+     * Retrieve Irc socket host
+     *
+     * @return string
+     */
+    public function getHost()
+    {
+        return $this->_host;
     }
 
     /**
