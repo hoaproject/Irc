@@ -316,17 +316,17 @@ class Socket extends HoaSocket
         $flags    = [];
         $options  = [];
 
-        $pattern  = '/^((#|%23)?([^,\?]+))(,([^\?]+))?(\?(.*))?$/';
+        $pattern  = '/^((#|%23)?(?<entity>[^,\?]+))(,(?<flags>[^\?]+))?(\?(?<options>.*))?$/';
         if (1 === preg_match($pattern, $complement, $matches)) {
-            $entity = $matches[3];
-            if (isset($matches[5])) {
-                $flags = explode(',', $matches[5]);
+            $entity = $matches['entity'];
+            if (isset($matches['flags'])) {
+                $flags = explode(',', $matches['flags']);
             }
-            if (isset($matches[7]) && !empty($matches[7])) {
+            if (isset($matches['options']) && !empty($matches['options'])) {
                 array_map(function ($item) use (&$options) {
                     $tmp = explode('=', $item);
                     $options[$tmp[0]] = $tmp[1];
-                }, explode('&', $matches[7]));
+                }, explode('&', $matches['options']));
             }
         }
 
