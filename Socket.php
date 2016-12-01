@@ -191,7 +191,7 @@ class Socket extends HoaSocket
 
             $this->_entity   = $parsed['nick'];
             $this->_username = isset($parsed['user'])?$parsed['user']:$this->_username;
-            $this->_host = isset($parsed['host'])?$parsed['host']:null;
+            $this->_host     = isset($parsed['host'])?$parsed['host']:null;
         }
 
         return;
