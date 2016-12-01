@@ -102,8 +102,7 @@ class Socket extends Test\Unit\Suite
                 ->string($result->getHostType())
                     ->isEqualTo(SUT::NETWORK_HOST)
                 ->array($result->getOptions())
-                    ->string['option1']->isEqualTo('value')
-                    ->integer['option2']->isEqualTo(0);
+                    ->isEmpty();
     }
 
     public function case_get_entity()
@@ -216,8 +215,7 @@ class Socket extends Test\Unit\Suite
             ->when($result = $socket->getOptions())
             ->then
                 ->array($result)
-                    ->integer['option1']->isEqualTo(0)
-                    ->string['option2']->isEqualTo('value');
+                    ->isEmpty();
     }
 
     public function case_is_irc_transport_registered()
@@ -310,7 +308,7 @@ class Socket extends Test\Unit\Suite
                 'secured'    => false,
                 'entity'     => 'foobar',
                 'entityType' => SUT::USER_ENTITY,
-                'options'    => ['option' => 'value'],
+                'options'    => [],
                 'username'   => 'user',
                 'password'   => 'pass'
             ]
