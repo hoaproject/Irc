@@ -244,6 +244,26 @@ class Socket extends HoaSocket
     }
 
     /**
+     * Parse given options using current context.
+     * @see    https://tools.ietf.org/html/draft-butcher-irc-url-04#section-2.6
+     * @param  array  $options
+     * @return array
+     */
+    protected function parseOptions(array $options)
+    {
+        //When entity is a channel, only supported option is `key`.
+        if ($this->_entityType === self::CHANNEL_ENTITY) {
+            return array_intersect_key(
+                $options,
+                ['key' => true]
+            );
+        }
+
+        //If there are invalid options, they are simply ignored.
+        return [];
+    }
+
+    /**
      * Factory to create a valid `Hoa\Socket\Socket` object.
      *
      * @param   string  $socketUri    URI of the socket to connect to.
