@@ -421,15 +421,23 @@ class          Client
             if (null !== $password = $socket->getPassword()) {
                 $source->setPassword($password);
             }
-            if (null !== $username = $socket->getUsername()) {
-                $source->setUsername($username);
-                $source->setNickname($username);
+
+            if ($socket->getEntitytype() === Socket::CHANNEL_ENTITY) {
+                if (null !== $username = $socket->getUsername()) {
+                    $source->setUsername($username);
+                    $source->setNickname($username);
+                }
+                if (null !== $entity = $socket->getEntity()) {
+                    $source->setChannel("#" . $entity);
+                }
             }
             if (
-                $socket->getEntitytype() === Socket::CHANNEL_ENTITY &&
+                $socket->getEntitytype() === Socket::USER_ENTITY &&
                 null !== $entity = $socket->getEntity()
             ) {
-                $source->setChannel("#" . $entity);
+                $username = $socket->getUsername();
+                $source->setUsername(null === $username?$entity:$username);
+                $source->setNickname($entity);
             }
         });
     }
