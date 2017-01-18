@@ -81,6 +81,8 @@ class Client extends HoaSocket\Connection\Handler implements Event\Listenable
             )
         );
 
+        $this->registerListeners();
+
         return;
     }
 
@@ -242,17 +244,13 @@ class Client extends HoaSocket\Connection\Handler implements Event\Listenable
     public function join($username, $channel, $password = null)
     {
         if (null !== $password) {
-            $this->send('PASS ' . $password);
+            $this->setPassword($password);
         }
 
-        $this->send('USER ' . $username . ' 0 * :' . $username);
-
-        $node = $this->getConnection()->getCurrentNode();
-        $node->setUsername($username);
-        $node->setChannel($channel);
+        $this->setUsername($username);
         $this->setNickname($username);
 
-        return $this->send('JOIN ' . $channel);
+        return $this->setChannel($channel);
     }
 
     /**
@@ -299,6 +297,43 @@ class Client extends HoaSocket\Connection\Handler implements Event\Listenable
     public function setNickname($nickname)
     {
         return $this->send('NICK ' . $nickname);
+    }
+
+    /**
+     * Set username.
+     *
+     * @param   string  $username    Username.
+     * @return  int
+     */
+    public function setUsername($username)
+    {
+        $this->getConnection()->getCurrentNode()->setUsername($username);
+
+        return $this->send('USER ' . $username . ' 0 * :' . $username);
+    }
+
+    /**
+     * Set password.
+     *
+     * @param   string  $password    Password.
+     * @return  int
+     */
+    public function setPassword($password)
+    {
+        return $this->send('PASS ' . $password);
+    }
+
+    /**
+     * Set channel.
+     *
+     * @param   string  $channel    Channel.
+     * @return  int
+     */
+    public function setChannel($channel)
+    {
+        $this->getConnection()->getCurrentNode()->setChannel($channel);
+
+        return $this->send('JOIN ' . $channel);
     }
 
     /**
@@ -366,5 +401,42 @@ class Client extends HoaSocket\Connection\Handler implements Event\Listenable
         );
 
         return $matches;
+    }
+
+    /**
+     * Register client listeners to interact with socket connection.
+     * Help to handle default actions based on socket URI
+     */
+    protected function registerListeners()
+    {
+        $this->on('open', function (Event\Bucket $bucket) {
+            $source = $bucket->getSource();
+            $socket = $source->getConnection()->getSocket();
+            if (!($socket instanceof Socket)) {
+                return;
+            }
+
+            if (null !== $password = $socket->getPassword()) {
+                $source->setPassword($password);
+            }
+
+            if ($socket->getEntitytype() === Socket::CHANNEL_ENTITY) {
+                if (null !== $username = $socket->getUsername()) {
+                    $source->setUsername($username);
+                    $source->setNickname($username);
+                }
+                if (null !== $entity = $socket->getEntity()) {
+                    $source->setChannel("#" . $entity);
+                }
+            }
+            if (
+                $socket->getEntitytype() === Socket::USER_ENTITY &&
+                null !== $entity = $socket->getEntity()
+            ) {
+                $username = $socket->getUsername();
+                $source->setUsername(null === $username?$entity:$username);
+                $source->setNickname($entity);
+            }
+        });
     }
 }
