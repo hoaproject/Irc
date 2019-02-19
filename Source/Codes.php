@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Hoa
  *
@@ -43,9 +45,6 @@ namespace Hoa\Irc;
  * RFC2811, RFC2812, RFC2813, RFC3675.
  *
  * Source: http://www.networksorcery.com/enp/protocol/irc.htm.
- *
- * @copyright  Copyright © 2007-2017 Hoa community
- * @license    New BSD License
  */
 class Codes
 {

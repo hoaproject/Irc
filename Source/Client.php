@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Hoa
  *
@@ -43,25 +45,18 @@ use Hoa\Socket as HoaSocket;
  * Class \Hoa\Irc\Client.
  *
  * An IRC client.
- *
- * @copyright  Copyright © 2007-2017 Hoa community
- * @license    New BSD License
  */
 class Client extends HoaSocket\Connection\Handler implements Event\Listenable
 {
     use Event\Listens;
 
-
-
     /**
      * Constructor.
-     *
-     * @param   \Hoa\Socket\Client  $client    Client.
-     * @throws  \Hoa\Socket\Exception
      */
     public function __construct(HoaSocket\Client $client)
     {
         parent::__construct($client);
+
         $this->getConnection()->setNodeName('\Hoa\Irc\Node');
         $this->setListener(
             new Event\Listener(
@@ -86,10 +81,6 @@ class Client extends HoaSocket\Connection\Handler implements Event\Listenable
 
     /**
      * Run a node.
-     *
-     * @param   \Hoa\Socket\Node  $node    Node.
-     * @return  void
-     * @throws  \Hoa\Irc\Exception
      */
     protected function _run(HoaSocket\Node $node)
     {
@@ -221,25 +212,16 @@ class Client extends HoaSocket\Connection\Handler implements Event\Listenable
 
     /**
      * Send a message.
-     *
-     * @param   string            $message    Message.
-     * @param   \Hoa\Socket\Node  $node       Node.
-     * @return  \Closure
      */
-    protected function _send($message, HoaSocket\Node $node)
+    protected function _send(string $message, HoaSocket\Node $node)
     {
         return $node->getConnection()->writeAll($message . CRLF);
     }
 
     /**
      * Join a channel.
-     *
-     * @param   string  $username    Username.
-     * @param   string  $channel     Channel.
-     * @param   string  $password    Password.
-     * @return  int
      */
-    public function join($username, $channel, $password = null)
+    public function join(string $username, string $channel, ?string $password = null): int
     {
         if (null !== $password) {
             $this->send('PASS ' . $password);
@@ -257,12 +239,8 @@ class Client extends HoaSocket\Connection\Handler implements Event\Listenable
 
     /**
      * Say something on a channel.
-     *
-     * @param   string  $message    Message.
-     * @param   string  $to         Channel or username.
-     * @return  void
      */
-    public function say($message, $to = null)
+    public function say(string $message, ?string $to = null)
     {
         if (null === $to) {
             $to = $this->getConnection()->getCurrentNode()->getChannel();
@@ -277,11 +255,8 @@ class Client extends HoaSocket\Connection\Handler implements Event\Listenable
 
     /**
      * Quit the network.
-     *
-     * @param   string  $message    Message.
-     * @return  int
      */
-    public function quit($message = null)
+    public function quit(?string $message = null): int
     {
         if (null !== $message) {
             $message = ' ' . $message;
@@ -292,23 +267,16 @@ class Client extends HoaSocket\Connection\Handler implements Event\Listenable
 
     /**
      * Set nickname.
-     *
-     * @param   string  $nickname    Nickname.
-     * @return  int
      */
-    public function setNickname($nickname)
+    public function setNickname(string $nickname): int
     {
         return $this->send('NICK ' . $nickname);
     }
 
     /**
      * Set topic.
-     *
-     * @param   string  $topic      Topic.
-     * @param   string  $channel    Channel.
-     * @return  int
      */
-    public function setTopic($topic, $channel = null)
+    public function setTopic(string $topic, string $channel = null): int
     {
         if (null === $channel) {
             $channel = $this->getConnection()->getCurrentNode()->getChannel();
@@ -319,12 +287,8 @@ class Client extends HoaSocket\Connection\Handler implements Event\Listenable
 
     /**
      * Invite someone on a channel.
-     *
-     * @param   string  $nickname    Nickname.
-     * @param   string  $channel     Channel.
-     * @return  int
      */
-    public function invite($nickname, $channel = null)
+    public function invite(string $nickname, string $channel = null): int
     {
         if (null === $channel) {
             $channel = $this->getConnection()->getCurrentNode()->getChannel();
@@ -335,12 +299,8 @@ class Client extends HoaSocket\Connection\Handler implements Event\Listenable
 
     /**
      * Reply to a ping.
-     *
-     * @param   string  $daemon     Daemon1.
-     * @param   string  $daemon2    Daemon2.
-     * @return  int
      */
-    public function pong($daemon, $daemon2 = null)
+    public function pong(string $daemon, ?string $daemon2 = null)
     {
         $this->send('PONG ' . $daemon);
 
@@ -353,11 +313,8 @@ class Client extends HoaSocket\Connection\Handler implements Event\Listenable
 
     /**
      * Parse a valid nick identifier.
-     *
-     * @param   string  $nick    Nick.
-     * @return  array
      */
-    public function parseNick($nick)
+    public function parseNick(string $nick): array
     {
         preg_match(
             '#^(?<nick>[^!]+)!(?<user>[^@]+)@(?<host>.+)$#',

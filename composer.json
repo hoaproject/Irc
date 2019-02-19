@@ -23,14 +23,15 @@
         "source": "https://central.hoa-project.net/Resource/Library/Irc"
     },
     "require": {
-        "hoa/consistency": "~1.0",
-        "hoa/event"      : "~1.0",
-        "hoa/exception"  : "~1.0",
-        "hoa/socket"     : "~1.0"
+        "php"            : ">=7.1",
+        "hoa/consistency": "dev-master",
+        "hoa/event"      : "dev-master",
+        "hoa/exception"  : "dev-master",
+        "hoa/socket"     : "dev-master"
     },
     "autoload": {
         "psr-4": {
-            "Hoa\\Irc\\": "."
+            "Hoa\\Irc\\": "Source"
         },
         "files": [ "Socket.php" ]
     },

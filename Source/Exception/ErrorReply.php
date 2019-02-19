@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Hoa
  *
@@ -36,22 +38,35 @@
 
 namespace Hoa\Irc\Exception;
 
-use Hoa\Consistency;
-use Hoa\Exception as HoaException;
+use Hoa\Irc;
 
 /**
- * Class \Hoa\Irc\Exception.
+ * Class \Hoa\Irc\Exception\ErrorReply.
  *
- * Extending the \Hoa\Exception\Exception class.
- *
- * @copyright  Copyright © 2007-2017 Hoa community
- * @license    New BSD License
+ * Extending the \Hoa\Irc\Exception class.
+ * Represent all IRC error replies, see
+ * https://tools.ietf.org/html/rfc1459#section-6.1.
  */
-class Exception extends HoaException
+class ErrorReply extends Exception
 {
-}
+    /**
+     * Constructor.
+     * Try to find an appropriate error message.
+     */
+    public function __construct(
+        string $message,
+        int $code      = 0,
+        array $arguments = [],
+        \Throwable $previous  = null
+    ) {
+        if (isset(Irc\Codes::$errorMapping[$code])) {
+            $message = Irc\Codes::$errorMapping[$code];
+        } else {
+            $message = 'Unknown error reply; code ' . $code . '.';
+        }
 
-/**
- * Flex entity.
- */
-Consistency::flexEntity('Hoa\Irc\Exception\Exception');
+        parent::__construct($message, $code, $arguments, $previous);
+
+        return;
+    }
+}
